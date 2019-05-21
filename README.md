@@ -15,7 +15,7 @@ For the first visualization, a map will be shown like so:
 The pie chart:
 [alt text](https://webarchive.nationalarchives.gov.uk/20081023090926im_/http://www.crimereduction.homeoffice.gov.uk/graphics/victims34.gif "Crimes split by type")
 
-Number of crimes per time hour:
+Number of crimes by the hour:
 ![alt text](https://minimaxir.com/img/sf-arrest-map/ssi-crime-1.png "Crimes by time of day")
 
 
