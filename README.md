@@ -8,6 +8,17 @@ Police budgets are never big enough to handle all cases being reported. To make 
 ## Solution:
 An interactive visualization of the amount and type of felonies commited in New York City, splittable by borough and time.
 
+**Example images:**
+For the first visualization, a map will be shown like so:
+![alt text](https://media2.govtech.com/images/940*443/NYC_CrimeMap.jpg "NYC crime map")
+
+The pie chart:
+[alt text](https://webarchive.nationalarchives.gov.uk/20081023090926im_/http://www.crimereduction.homeoffice.gov.uk/graphics/victims34.gif "Crimes split by type")
+
+Number of crimes per time hour:
+![alt text](https://minimaxir.com/img/sf-arrest-map/ssi-crime-1.png "Crimes by time of day")
+
+
 **Features (mvp):**
 * A map of New York City, the colour of each borough corresponding to the total amount of felonies committed
 * When a borough is clicked, a pie chart containing the distribution of the types of felonies appears
@@ -23,4 +34,4 @@ An interactive visualization of the amount and type of felonies commited in New 
 Data set to be used: [https://www.kaggle.com/adamschroeder/crimes-new-york-city](https://www.kaggle.com/adamschroeder/crimes-new-york-city)
 Depending on the implementation of multiple years, the original dataset from New York City itself can also be used: [https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i](https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i)
 
-The city of New York already offers an extensive visualization tool for this dataset, where most of the variables can be plotted against each other. Both a map and a timeline could be useful additions to these visualizations. 
+The city of New York already offers an extensive visualization tool for this dataset, where most of the variables can be plotted against each other. Both a map and a timeline could be useful additions to these visualizations.
