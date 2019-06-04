@@ -31,3 +31,10 @@ the amount of crimes committed in at each hour of the day.
 * A calendar view. Besides the timeline, a calendar view will appear below the
 map. Each day will have a colour corresponding with the amount of crimes committed
 that day
+
+**Requirements**
+* Datamap of NYC precincts
+* d3.js library
+* Datamap.js
+* Topojson
+* Possibly bootstrap for presentation
