@@ -43,4 +43,14 @@ in that year in the given precinct, split by category (violation, misdemeanor or
 Data set to be used: [https://www.kaggle.com/adamschroeder/crimes-new-york-city](https://www.kaggle.com/adamschroeder/crimes-new-york-city)
 Depending on the implementation of multiple years, the original dataset from New York City itself can also be used: [https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i](https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i)
 
-The city of New York already offers an extensive visualization tool for this dataset, where most of the variables can be plotted against each other. Both a map and a timeline could be useful additions to these visualizations.
+* The d3.js library will be used extensively, as it contains a lot of useful tools for
+data visualization.
+* Datamap.js will be used for the initial visualization, the map of New York City
+* Topojson will be used for the datamap
+
+The city of New York already offers an extensive visualization tool for this dataset,
+where most of the variables can be plotted against each other.
+Both a map and a timeline could be useful additions to these visualizations.
+
+The hardest part will probably be transforming the dataset into a usable format.
+It contains more than 6.5 million datapoints.
