@@ -1,0 +1,17 @@
+# Week 1
+### Day 1:
+Had already decided to do a data visualization of crime in New York City. I had found a dataset for the years 2014 and 2015. Initially wanted to visualize crime in the 5 different boroughs, but later decided to further specify it by police precinct. Planning to make map, a timeline and a pie chart. Finished
+initial proposal.
+
+### Day 2:
+Decided to look at misdemeanors and violations as well, instead of only at felonies. Due to the high number of different types of crimes it's better to do a calendar view to look at the amount of crime on different days of the year instead of a pie chart, which would become unreadable if too many types are shown. Started with design document. Decided to possibly add a week slider and possibly a week visualization
+
+### Day 3:
+Found a map of NYC precincts. Unfortunately it is in GEOjson and needs to be converted to Topojson. Set up github and html page. Found out data is also put into broader categories, making a pie chart possible again.
+
+### Day 4:
+Started with the csv conversion script. Tried to convert it into a logical json file. Also found out the api is publicly available. Might be interesting to use that instead of the massive csv file used currently. Using jQuery would be an idea.
+
+### Day 5:
+Start by further working out api idea. Site for requesting an api token is
+offline unfortunately.

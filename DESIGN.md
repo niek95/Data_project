@@ -22,15 +22,17 @@ file can be deleted.
 The visualization will consist of three parts:
 * A map of New York. Each precinct will have a colour corresponding with the
 total amount of crimes committed for a given day, or hour. A slider can
-be used to pick a specific time to view the map, and a date selector to pick a
-specific date. A dropdown menu might be added to select the type of crime
-(violation, misdemeanor or felony)
+be used to pick a specific day of the week and time to view the map, and
+possibly a date selector to pick a specific date. A dropdown menu might be added
+to select the type of crime (violation, misdemeanor or felony)
 * A timeline. When a precinct is clicked a line chart representing a 24h time
 period appears under the map. A line for each of the crime categories will show
 the amount of crimes committed in at each hour of the day.
 * A calendar view. Besides the timeline, a calendar view will appear below the
 map. Each day will have a colour corresponding with the amount of crimes committed
 that day
+* (Extra) A week view
+* (Extra) Pie chart with categories
 
 **Requirements**
 * Datamap of NYC precincts

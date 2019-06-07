@@ -1,6 +1,7 @@
 Differences in major crime statistics between police precincts of New York City
 =======
 Niek Slemmer 12639184
+https://niek95.github.io/Data_project/
 Final project of the programming minor. For this project I will attempt to visualize the amount and
 occurrence times of crimes for each police precinct of New York City.
 [Data source](https://www.kaggle.com/adamschroeder/crimes-new-york-city)
