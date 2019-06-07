@@ -17,6 +17,12 @@ can be reduced by a significant amount.
 
 Python will be used for both these steps. After this program is run the original
 file can be deleted.
+#### Data representation
+Instead of individual rows of single crimes the data will be aggregated by
+precinct. Each precinct will have its own object. Containing a calendar and week
+attribute. The calendar attribute will have a seperate calendar for each year,
+and each day of the week will be divided into hours. A count will be attached
+to each attribute for each of the categories.
 
 **Visualization**
 The visualization will consist of three parts:

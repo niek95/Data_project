@@ -3,22 +3,67 @@
   <head>
     <meta charset="utf-8">
     <title>Data project</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="https://d3js.org/d3.v5.js"></script>
     <script>
       var d3v5 = window.d3;
       window.d3 = null;
     </script>
     <script src="https://d3js.org/d3.v3.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
-    <script src="datamaps.world.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+    <script src="http://datamaps.github.io/scripts/0.4.4/datamaps.world.min.js"></script>
     <script>
       d3v3 = d3;
       window.d3 = null;
     </script>
   </head>
   <body>
-    <p>Niek Slemmer, 12639184</p>
-    <p>Data source:</p>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">NYPD crime visualization</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">All crime</a></li>
+          <li><a href="#">Violations</a></li>
+          <li><a href="#">Misdemeanors</a></li>
+          <li><a href="#">Felonies</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div>
+      <p>Niek Slemmer, 12639184</p>
+      <p>Data source: https://www.kaggle.com/adamschroeder/crimes-new-york-city</p>
+      <p>
+        Police budgets are never big enough to handle all cases being reported.
+        To make sure the available budget is being spent as efficiently as
+        possible it is useful to know when and where certain types of crimes are
+        committed. This way, police departments can allocate resources where
+        they are needed. As the amount of crimes is very high for a city as big
+        as New York, I built an interactive visualization to help police
+        departments in determining where and when capacity is needed the most.
+      </p>
+    </div>
+    <div>
+      <form>
+        Specific day in 2014:
+        <input type="date" name="date" min="2014-01-01" max="2014-12-31">
+      </form>
+      <input type="range" name="weekday" min="1" max="7" step="1" list="steplist">
+      <datalist id="steplist">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+      </datalist>
+      <label for="weekday">Day of the week</label>
+      <input type="range" name="time" min="0" max="23" step="1">
+      <label for="time">Time of day</label>
+    </div>
     <script src="visualize.js"></script>
   </body>
 </html>

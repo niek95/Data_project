@@ -14,4 +14,7 @@ Started with the csv conversion script. Tried to convert it into a logical json 
 
 ### Day 5:
 Start by further working out api idea. Site for requesting an api token is
-offline unfortunately.
+offline unfortunately. Api request for 50.000 records, about the amount of
+crimes in a year, takes almost 30 seconds. If you add all the processing this
+will take way too long. Back to the local dataset. Added input sliders and date
+input. Added bootstrap navbar, which seems to break the sliders for some reason
