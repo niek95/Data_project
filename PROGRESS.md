@@ -18,3 +18,9 @@ offline unfortunately. Api request for 50.000 records, about the amount of
 crimes in a year, takes almost 30 seconds. If you add all the processing this
 will take way too long. Back to the local dataset. Added input sliders and date
 input. Added bootstrap navbar, which seems to break the sliders for some reason
+
+# Week 2
+### Day 6:
+Finished preprocessing scripts. Removes unnecessary columns, groups crimes by
+precinct and sorts crimes by date and time. Data is output in json. This reduces
+the file size to about 20MB.

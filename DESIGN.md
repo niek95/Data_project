@@ -9,9 +9,10 @@ original sources from the NYPD can also be used: ![Original source](https://data
 Firstly, the dataset that is going to be used is massive, and contains about
 6.5 million datapoints. To make sure the visualizations are runnable and to
 prevent losing the big picture the data will have to be aggregated into a more
-usable format. As we are interested in the differences between police precincts
+usable format. Firstly we delete all columns we don't need.
+As we are interested in the differences between police precincts
 the data will be split into three categories: violations, misdemeanors and
-felonies. Each precinct will be represented as a json object, containing
+felonies. Each precinct will be converted to an object, containing
 the amount of each category of crime, sorted by day or hour. This way the file size
 can be reduced by a significant amount.
 
