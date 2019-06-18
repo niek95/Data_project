@@ -20,7 +20,32 @@ will take way too long. Back to the local dataset. Added input sliders and date
 input. Added bootstrap navbar, which seems to break the sliders for some reason
 
 # Week 2
-### Day 6:
+### Day 6/7:
 Finished preprocessing scripts. Removes unnecessary columns, groups crimes by
 precinct and sorts crimes by date and time. Data is output in json. This reduces
-the file size to about 20MB.
+the file size to about 20MB. Keep getting topojson error.
+
+### Day 8:
+Fixed topojson error after a day and a half. Now it still won't render properly,
+probably due to the projection or conversion from geojson. Can't figure it out.
+
+### Day 9:
+Found a working projection by trial and error. Centered the map on the proper
+coordinates and zoomed in 50000 times.
+
+### Day 10:
+Need to find a way to efficiently search the dataset by day and hour, as this
+needs to be done in realtime whenever a user changes the parameters. Need
+to change the datastructure a bit for easier searching. Dataset now holds
+seperate lists per precinct per month.
+
+# Week 3
+### Day 11:
+Decided to add seperate lists for days as well. Something in the dataprocessing
+seems to go wrong, as there are not enough crimes per day.
+
+### Day 12
+Stuck on giving colour to the map. Added name attribute to the topojson, but
+that didn't work. Apparently datamaps needs an id to link data to the map. Need
+to add this to the json file. Wrote a small python script to add it. Map finally
+displays correct colours.
