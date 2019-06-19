@@ -5,7 +5,9 @@ window.onload = function() {
 var main = async () => {
   let json_data = await d3v5.json("Data/NYPD_crimes.json");
   console.log(json_data);
-  build_map(select_data(json_data));
+  let start = new Date(2014, 1, 1, 0);
+  let end = new Date(2015, 1, 1, 0);
+  build_map(select_data(json_data, [start, end]));
 };
 
 var build_map = (crime_data) => {
@@ -19,7 +21,6 @@ var build_map = (crime_data) => {
         let iso = item[0], value = item[1];
         colour_data[iso] = {numberOfThings: value, fillColor: paletteScale(value)};
     });
-  colour_data["undefined"] = {numberOfThings: 0, fillColor: "#3e29db"};
   console.log(colour_data);
   var map = new Datamap({
     element: document.getElementById("container"),
@@ -27,7 +28,7 @@ var build_map = (crime_data) => {
     geographyConfig: {
       dataUrl: "/Data/precincts.json",
       popupTemplate: (geography, data) => {
-        return geography.properties.name;
+        return geography.properties.precinct;
       }
     },
     scope: 'Police Precincts',
@@ -53,16 +54,24 @@ var get_min_max = (dataset) => {
   return [curr_min, curr_max];
 };
 
-var select_data = (json_data) => {
+var select_data = (json_data, range) => {
   dataset = [];
   for (let precinct in json_data) {
-    let totals = 0;
-    for (let month in json_data[precinct].crimes) {
-      for (let day in json_data[precinct].crimes[month]) {
-        totals += json_data[precinct].crimes[month][day].length;
+    // Initialize array to track the number of violations, misdemeanors and felonies, respectively
+    crimes = [0, 0, 0];
+    for (let m = range[0].getYear(); m < range[1].getYear(); m++) {
+      for (let i = range[0].getMonth(); i < range[1].getMonth(); i++) {
+        for (let j = range[0].getDate(); j < range[1].getDate(); j++) {
+          for (let k = range[0].getHour(); k < range[1].getHour(); k++) {
+            for (let l in json_data[i][j][k]) {
+              crimes[json_data[i][j][k][1] - 1]++;
+            }
+          }
+        }
       }
     }
-    dataset.push([json_data[precinct].id, totals]);
+    total = crimes[0] + crimes [1] + crimes[2];
+    dataset.push([precinct, total]);
   }
   return dataset;
 };

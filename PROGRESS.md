@@ -49,3 +49,10 @@ Stuck on giving colour to the map. Added name attribute to the topojson, but
 that didn't work. Apparently datamaps needs an id to link data to the map. Need
 to add this to the json file. Wrote a small python script to add it. Map finally
 displays correct colours.
+
+### Day 13
+Added hour to json file and removed time and precinct entirely after processing
+in order to get a smaller file size and faster displaying speed. This way all
+information is encoded in the json file itself so it contains no more redundant
+information. Now to find a way to loop through everything based on the chosen
+time period.
