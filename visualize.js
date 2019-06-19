@@ -5,8 +5,8 @@ window.onload = function() {
 var main = async () => {
   let json_data = await d3v5.json("Data/NYPD_crimes.json");
   console.log(json_data);
-  let start = new Date(2014, 1, 1, 0);
-  let end = new Date(2015, 1, 1, 0);
+  let start = new Date(2014, 0, 0, 0);
+  let end = new Date(2014, 11, 31, 23);
   build_map(select_data(json_data, [start, end]));
 };
 
@@ -57,15 +57,22 @@ var get_min_max = (dataset) => {
 var select_data = (json_data, range) => {
   dataset = [];
   for (let precinct in json_data) {
+    console.log(precinct)
     // Initialize array to track the number of violations, misdemeanors and felonies, respectively
     crimes = [0, 0, 0];
-    for (let m = range[0].getYear(); m < range[1].getYear(); m++) {
-      for (let i = range[0].getMonth(); i < range[1].getMonth(); i++) {
-        for (let j = range[0].getDate(); j < range[1].getDate(); j++) {
-          for (let k = range[0].getHour(); k < range[1].getHour(); k++) {
-            for (let l in json_data[i][j][k]) {
-              crimes[json_data[i][j][k][1] - 1]++;
-            }
+    for (let i = range[0].getMonth(); i <= range[1].getMonth(); i++) {
+      let stop_day = json_data[precinct].crimes[i].length;
+      if (range[0].getDate() == range[1].getDate()) {
+        stop_day = range[1].getDate();
+      }
+      for (let j = range[0].getDate(); j <= stop_day; j++) {
+        let stop_hour = 23;
+        if (range[0].getHours() == range[1].getHours()) {
+          stop_hour = range[1].getHours();
+        }
+        for (let k = range[0].getHours(); k <= stop_hour; k++) {
+          for (let l in json_data[precinct].crimes[i][j][k]) {
+            crimes[json_data[precinct].crimes[i][j][k][1] - 1]++;
           }
         }
       }
