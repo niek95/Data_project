@@ -56,3 +56,8 @@ in order to get a smaller file size and faster displaying speed. This way all
 information is encoded in the json file itself so it contains no more redundant
 information. Now to find a way to loop through everything based on the chosen
 time period.
+
+### Day 14
+Finally managed to finish the date selector. It's very messy at the moment, so
+future optimizations might be able to make it run a bit faster. Also fixed
+the day selector and attached it to the slider on the page.
