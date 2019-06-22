@@ -77,4 +77,10 @@ styling and layout of the page.
 
 ### Weekend
 Finished the calendar. Now to add titles, legends and fix small bugs,
-inconsistencies and streamline code.
+inconsistencies and streamline code. Due to the fact that no more features
+should be added, it might be worth it to eliminate the data about the specific
+type of crime entirely, and to aggregate it into the main categories per hour.
+This eliminates the final step in a lot of data loops so could speed up the
+visualisation significantly.
+Some functions have functionality that is very similar to other functions. Some
+of them could be merged to improve space, code complexity and readability.
