@@ -61,3 +61,16 @@ time period.
 Finally managed to finish the date selector. It's very messy at the moment, so
 future optimizations might be able to make it run a bit faster. Also fixed
 the day selector and attached it to the slider on the page.
+
+### Day 15
+After speaking with a few fellow students I decided that a date selector might
+not even be necessary. It is not really relevant for seeing trends in data.
+Seeing the difference between days in the week is more important.
+Also the colours scale differently depending on the data selected. It might be
+better to get an overall maximum so that differences between days and hours
+become more clear. Finished the line graph view and started on the calendar.
+Realized today that I haven't committed everyday, as I mostly work on one
+laptop only. Also received feedback about the navbar, which I had put in in
+the first week but would work better as a dropdown. Will focus this weekend on
+getting the calendar working as soon as possible, in order to get going on the
+styling and layout of the page.
