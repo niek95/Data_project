@@ -58,23 +58,22 @@ var build_map = (json_data, day) => {
 };
 
 var build_calendar = (json_data, precinct, crime_level) => {
-
   d3v5.select(".calendar").remove();
-  let cell_size = 15;
-  let cal_height = 150;
-  let cal_width = 900;
+  let cal_width = 700;
   let margin = 50;
+  let month_margin = 3;
+  let cell_size = (cal_width - 2 * margin - 12 * month_margin) / 53;
+  let cal_height = 2 * margin + 7 * cell_size;
   let calendar_data = get_calendar_data(json_data, precinct, crime_level);
 
   let day = d3v5.timeFormat("%w");
   let week = d3v5.timeFormat("%U");
+  let month = d3v5.timeFormat("%m");
 	let format = d3v5.timeFormat("%Y%m%d");
   let week_days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
   let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  let min_max = get_min_max_calendar(calendar_data);
-  console.log(min_max)
   let colour_scale = d3.scale.linear()
-            .domain([min_max[0], min_max[1]])
+            .domain([0, get_max_calendar(calendar_data)])
             .range(["#FFFFFF","#A50F15"]);
 
   let svg = d3v5.select("body")
@@ -83,8 +82,8 @@ var build_calendar = (json_data, precinct, crime_level) => {
     .attr("height", cal_height)
     .attr("class", "calendar")
     .append("g")
-      .attr("transform", "translate(" + ((cal_width - cell_size * 53) / 2) +
-      "," + (cal_height - cell_size * 7) + ")");
+      .attr("transform", "translate(" + margin +
+      "," + (cal_height - cell_size * 7 - margin) + ")");
 
   for (let i = 0; i < 7; i++) {
   svg.append("text")
@@ -94,7 +93,7 @@ var build_calendar = (json_data, precinct, crime_level) => {
     .text((d) => { return week_days[i]; });
      }
 
-  var rect = svg.selectAll(".day")
+  let rect = svg.selectAll(".day")
    .data((d) => {
      return d3.time.days(new Date(2014, 0, 1), new Date(2015, 0, 1));
    })
@@ -103,14 +102,39 @@ var build_calendar = (json_data, precinct, crime_level) => {
    .attr("class", "day")
    .attr("width", cell_size)
    .attr("height", cell_size)
-   .attr("x", (d) => { return week(d) * cell_size + 1; })
-   .attr("y", (d) => { return day(d) * cell_size + 1; });
+   .attr("rx", cell_size / 5).attr("ry", cell_size / 5)
+   .attr("x", (d) => { return week(d) * cell_size + month(d) * month_margin; })
+   .attr("y", (d) => { return day(d) * cell_size; });
 
 
   rect.filter((d) => {
     return d in calendar_data;
   })
     .attr("fill", (d) => { return colour_scale(calendar_data[d]); });
+
+  let month_titles = svg.selectAll(".month_title")
+    .data(months)
+    .enter()
+    .append("g")
+    .attr("class", "month_title")
+    .attr("transform", (d, i) => {
+      return "translate(" + (margin + i * (cal_width - 2 * margin) / 12) + ",0)";
+    });
+
+  month_titles.append("text")
+     .attr("class", (d,i) => { return months[i]; })
+     .style("text-anchor", "end")
+     .attr("dy", "-.25em")
+     .text((d,i) => { return months[i]; });
+
+  d3v5.select(".calendar")
+    .append("text")
+    .attr("transform", "translate(" + cal_width / 2 + "," + margin / 2 + ")")
+    .attr("text-anchor", "middle")
+    .text((d) => {
+      let title = ["Total crimes", "Violations", "Misdemeanors", "Felonies"];
+      return title[crime_level] + " in 2014: Precinct " + precinct;
+    });
 };
 
 
@@ -233,14 +257,13 @@ var get_min_max = (dataset) => {
   return [curr_min, curr_max];
 };
 
-var get_min_max_calendar = (dataset) => {
-  let curr_min = Number.MAX_SAFE_INTEGER;
+var get_max_calendar = (dataset) => {
   let curr_max = 0;
   for (var key in dataset) {
-    curr_min = Math.min(curr_min, dataset[key]);
+
     curr_max = Math.max(curr_max, dataset[key]);
   }
-  return [curr_min, curr_max];
+  return curr_max;
 };
 
 var select_data = (json_data, range) => {

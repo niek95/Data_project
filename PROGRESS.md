@@ -74,3 +74,7 @@ laptop only. Also received feedback about the navbar, which I had put in in
 the first week but would work better as a dropdown. Will focus this weekend on
 getting the calendar working as soon as possible, in order to get going on the
 styling and layout of the page.
+
+### Weekend
+Finished the calendar. Now to add titles, legends and fix small bugs,
+inconsistencies and streamline code.
