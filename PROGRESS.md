@@ -84,3 +84,12 @@ This eliminates the final step in a lot of data loops so could speed up the
 visualisation significantly.
 Some functions have functionality that is very similar to other functions. Some
 of them could be merged to improve space, code complexity and readability.
+Used this link as guide for the calendar:
+https://www.crowdanalytix.com/communityBlog/10-steps-to-create-calendar-view-heatmap-in-d3-js
+
+### Day 16
+Further small advancements, adding updateable titles, positioning, small code
+improvements. Also discussed with another student on how to transition visualizations.
+Was able to remove get_min_max function by modifying the data retriever.
+Finished legend for datamap and added dynamic title based on data shown. TA
+suggested using a drag slider in d3 instead of a html range input.

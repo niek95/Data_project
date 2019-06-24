@@ -5,44 +5,68 @@ window.onload = function() {
 var main = async () => {
   let json_data = await d3v5.json("Data/NYPD_crimes.json");
   //console.log(json_data);
-  let day_select = document.getElementById("dayselect");
-  build_map(json_data, 7);
-  build_calendar(json_data, 78, 0)
-  day_select.onchange = () => {
-    build_map(json_data, day_select.value);
+  crime_select = document.getElementById("crimeselect");
+  day_select = document.getElementById("dayselect");
+  hour_select = document.getElementById("hourselect");
+  build_map(json_data, select_day(json_data, hour_select.value, day_select.value, crime_select.value));
+  crime_select.onchange = () => {
+    build_map(json_data, select_day(json_data, hour_select.value, day_select.value, crime_select.value));
   };
+  day_select.onchange = () => {
+    hour_select.value = "24";
+    build_map(json_data, select_day(json_data, hour_select.value, day_select.value, crime_select.value));
+  };
+  hour_select.onchange = () => {
+    console.log(hour_select.value)
+    day_select.value = "7";
+    build_map(json_data, select_day(json_data, hour_select.value, day_select.value, crime_select.value));
+  };
+
 //  let start = new Date(2014, 1, 1, 0);
 //  let end = new Date(2014, 11, 31, 23);
 //  build_map(select_day(json_data, 6));
 };
 
-var build_map = (json_data, day) => {
-  crime_data = select_day(json_data, day, 0);
-  var colour_data = {};
+var build_map = (json_data, crime_data) => {
+  let map_width = document.getElementById("mapcontainer").clientWidth;
+  let map_height = document.getElementById("mapcontainer").clientHeight;
   d3v5.select("svg").remove();
-  let min_max = get_min_max(crime_data);
+  let start_colour = "#FFFFFF";
+  let stop_colour = "#A50F15";
+  var colour_data = {};
   let palette_scale = d3.scale.linear()
-            .domain([min_max[0], min_max[1]])
-            .range(["#FFFFFF","#A50F15"]);
-  crime_data.forEach(item => {
+            .domain([0, crime_data[1]])
+            .range([start_colour, stop_colour]);
+  crime_data[0].forEach(item => {
         let iso = item[0], value = item[1];
         colour_data[iso] = {numberOfThings: value, fillColor: palette_scale(value)};
     });
-  console.log(colour_data);
+
+  d3v5.select(".datamap").append("rect")
+    .attr("width", map_width)
+    .attr("height", map_height)
+    .attr("stroke", "black")
+    .attr("stroke-width", 2)
+    .attr("fill-opacity", 0)
+
   var map = new Datamap({
-    element: document.getElementById("container"),
+    element: document.getElementById("mapcontainer"),
     data: colour_data,
     geographyConfig: {
       dataUrl: "/Data/precincts.json",
-      popupTemplate: (geography, data) => {
-        return geography.properties.precinct;
+      popupTemplate: function(geo, data) {
+        return ['<div class="hoverinfo"><strong>',
+                "Precinct: " +
+                geo.properties.precinct,
+                ': ' + data.numberOfThings,
+                '</strong></div>'].join('');
       }
     },
     scope: 'Police Precincts',
     setProjection: (element, options) => {
       var projection, path;
       projection = d3.geo.equirectangular()
-          .center([-73.75, 40.730610])
+          .center([-73.72, 40.730610])
           .scale(50000);
       path = d3.geo.path()
         .projection(projection);
@@ -50,11 +74,86 @@ var build_map = (json_data, day) => {
    },
    done: datamap => {
      datamap.svg.selectAll('.datamaps-subunit').on('click', geography => {
-       build_calendar(json_data, geography.properties.precinct, 0);
-       build_line_graph(json_data, geography.properties.precinct, 0);
+       build_calendar(json_data, geography.properties.precinct, crime_select.value);
+       build_line_graph(json_data, geography.properties.precinct, crime_select.value);
      });
    }
   });
+
+  let title = () => {
+    if (day_select.value == 7) {
+      if (hour_select.value == 24) {
+        let crimes = ["All crime", "Violations", "Misdemeanors", "Felonies"];
+        return crimes[crime_select.value] + " in 2014";
+      } else {
+        let crimes = ["All crime", "Violations", "Misdemeanors", "Felonies"];
+        return crimes[crime_select.value] + " between " + hour_select.value + "-" + (parseInt(hour_select.value) + 1) + " o'clock in 2014";
+      }
+    } else {
+      let days = ["Sundays", "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays"];
+      let crimes = ["All crime", "Violations", "Misdemeanors", "Felonies"];
+      return crimes[crime_select.value] + " on " + days[day_select.value] + " in 2014";
+    }
+  };
+
+  d3v5.select(".datamap")
+    .append("g")
+    .append("text")
+    .attr("class", "map-title")
+    .attr("x", map_width / 2)
+    .attr("y", 30)
+    .text(title)
+    .attr("text-anchor", "middle")
+    .attr("font-size", 18);
+
+  let svg = d3v5.select(".datamap").append("g").attr("class", "map-legend")
+
+  let defs = svg.append("defs");
+
+  let linearGradient = defs.append("linearGradient")
+      .attr("id", "linear-gradient");
+
+  linearGradient
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "100%")
+      .attr("y2", "0%");
+
+  linearGradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", start_colour);
+
+  linearGradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", stop_colour);
+
+  let legend_width = map_width / 3;
+  let legend_height = 20;
+  let legend_values = [0, 0.2, 0.4, 0.6, 0.8, 1];
+  let legend_x = legend_width;
+  let legend_y = map_height - 40;
+  legend_values = legend_values.map((x) => { return Math.floor(crime_data[1] * x); });
+
+  svg.append("rect")
+      .attr("width", legend_width)
+      .attr("height", legend_height)
+      .style("fill", "url(#linear-gradient)")
+      .attr("x", legend_width)
+      .attr("y", legend_y)
+      .attr("stroke", "black")
+      .attr("stroke-width", 1);
+
+  svg.selectAll(".legend-values").data(legend_values)
+    .enter()
+    .append("text")
+    .attr("class", "legend-values")
+    .attr("x", (d, i) => {
+      return legend_x + i * (legend_width / (legend_values.length - 1));
+    })
+    .attr("y", legend_y + legend_height + 10)
+    .text((d) => { return d; })
+    .attr("text-anchor", "middle")
+    .attr("font-size", 10);
 };
 
 var build_calendar = (json_data, precinct, crime_level) => {
@@ -81,18 +180,16 @@ var build_calendar = (json_data, precinct, crime_level) => {
     .attr("width", cal_width)
     .attr("height", cal_height)
     .attr("class", "calendar")
-    .append("g")
-      .attr("transform", "translate(" + margin +
-      "," + (cal_height - cell_size * 7 - margin) + ")");
+    .append("g");
 
-  for (let i = 0; i < 7; i++) {
+
+  for (let i = 1; i < 8; i++) {
     svg.append("text")
-      .attr("transform", "translate(-5," + cell_size * (i + 1) + ")")
-      .style("text-anchor", "end")
-      .attr("dy", "-.25em")
+      .attr("x", margin / 2)
+      .attr("y", margin + cell_size * i)
       .text(() => {
         let week_days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
-        return week_days[i]; });
+        return week_days[i - 1]; });
        }
 
   let rect = svg.selectAll(".day")
@@ -105,8 +202,10 @@ var build_calendar = (json_data, precinct, crime_level) => {
    .attr("width", cell_size)
    .attr("height", cell_size)
    .attr("rx", cell_size / 5).attr("ry", cell_size / 5)
-   .attr("x", (d) => { return week(d) * cell_size + month(d) * month_margin; })
-   .attr("y", (d) => { return day(d) * cell_size; });
+   .attr("x", (d) => { return margin + week(d) * cell_size + month(d) * month_margin; })
+   .attr("y", (d) => { return margin +  day(d) * cell_size; })
+   .attr("stroke", "black")
+   .attr("stroke-width", 1);
 
 
   rect.filter((d) => {
@@ -117,17 +216,16 @@ var build_calendar = (json_data, precinct, crime_level) => {
   let month_titles = svg.selectAll(".month_title")
     .data(months)
     .enter()
-    .append("g")
-    ;
+    .append("g");
 
   month_titles.append("text")
     .attr("class", "month_title")
-    .attr("transform", (d, i) => {
-      return "translate(" + (margin + i * (cal_width - 2 * margin) / 12) + ",0)";
+    .attr("x", (d, i) => {
+      return margin + i * (cal_width - 2 * margin) / 12;
     })
-   .style("text-anchor", "end")
-   .attr("dy", "-.25em")
-   .text((d,i) => { return months[i]; });
+    .attr("y", 4 * margin / 5)
+    .attr("text-anchor", "start")
+    .text((d,i) => { return months[i]; });
 
   d3v5.select(".calendar")
     .append("text")
@@ -138,29 +236,41 @@ var build_calendar = (json_data, precinct, crime_level) => {
       return title[crime_level] + " in 2014: Precinct " + precinct;
     });
 
+  let legend_array = [0, 0.25, 0.5, 0.75, 1];
+  legend_array = legend_array.map((x) => { return max_crimes * x; });
+
   let legend = svg.selectAll(".cal_legend")
-    .data(() => {
-      let legend_array = [0, 0.25, 0.5, 0.75, 1];
-      legend_array = legend_array.map((x) => { return max_crimes * x; });
-      console.log(legend_array)
-      return legend_array;
-    })
-    .enter()
-    .append("rect")
+    .append("g")
     .attr("class", "cal_legend")
+    .data(legend_array)
+    .enter()
+
+  legend.append("rect")
     .attr("width", cell_size)
     .attr("height", cell_size)
     .attr("rx", cell_size / 5).attr("ry", cell_size / 5)
-    .attr("x", cal_width - (3 / 4) * margin)
+    .attr("x", cal_width - 3 * margin / 4)
     .attr("y", (d, i) => {
       let distance = cell_size * 1.2;
-      console.log(distance)
       let start_point = (cal_height / 2) - 2.5 * distance;
-      console.log(start_point)
-            console.log(start_point + i * distance)
       return start_point + i * distance;
     })
-    .attr("fill", (d) => { return colour_scale(d); });
+    .attr("fill", (d) => { return colour_scale(d); })
+    .attr("stroke", "black")
+    .attr("stroke-width", 1);
+
+  legend.append("text")
+  .attr("x", cal_width - margin / 2)
+  .attr("y", (d, i) => {
+    let distance = cell_size * 1.2;
+    let start_point = (cal_height / 2) - 2.5 * distance;
+    return start_point + i * distance;
+  })
+  .attr("dy", ".35em")
+  .text((d) => {
+    let types = ["Total crimes", "Violations", "Misdemeanors", "Felonies"];
+    return d + " " + types[crime_level];
+  });
 };
 
 var build_line_graph = (json_data, precinct, crime_level) => {
@@ -257,8 +367,9 @@ var get_calendar_data = (json_data, precinct, crime_level) => {
   return calendar_data;
 };
 
-var select_day = (json_data, day_of_week, crime_level) => {
+var select_day = (json_data, hour_of_day, day_of_week, crime_level) => {
   dataset = [];
+  let max_value = 0;
   for (let precinct in json_data) {
     // Initialize array for counting crimes by level, with totals[0] for all levels combined
     totals = [0, 0, 0, 0];
@@ -267,27 +378,20 @@ var select_day = (json_data, day_of_week, crime_level) => {
         let current_day = new Date(2014, month, day).getDay();
         if (day_of_week == 7 || current_day == day_of_week) {
           for (var hour in json_data[precinct].crimes[month][day]) {
-            for (let crime in json_data[precinct].crimes[month][day][hour]) {
-              totals[json_data[precinct].crimes[month][day][hour][crime][1]]++;
+            if (hour_of_day == 24 || hour == hour_of_day) {
+              for (let crime in json_data[precinct].crimes[month][day][hour]) {
+                totals[json_data[precinct].crimes[month][day][hour][crime][1]]++;
+              }
             }
           }
         }
       }
     }
     totals[0] = totals[1] + totals[2] + totals[3];
+    max_value = Math.max(max_value, totals[crime_level]);
     dataset.push([precinct, totals[crime_level]]);
   }
-  return dataset;
-};
-
-var get_min_max = (dataset) => {
-  let curr_min = Number.MAX_SAFE_INTEGER;
-  let curr_max = 0;
-  for (let i = 0; i < dataset.length; i++) {
-    curr_min = Math.min(curr_min, dataset[i][1]);
-    curr_max = Math.max(curr_max, dataset[i][1]);
-  }
-  return [curr_min, curr_max];
+  return [dataset, max_value];
 };
 
 var get_max_calendar = (dataset) => {
@@ -301,7 +405,10 @@ var get_max_calendar = (dataset) => {
 var get_max_day = (json_data, crime_level) => {
   let curr_max = 0;
   for (let precinct in json_data) {
-    curr_max = Math.max(curr_max, get_max_calendar(get_calendar_data(json_data, precinct, crime_level)))
+    dataset = get_calendar_data(json_data, precinct, crime_level);
+    for (var key in dataset) {
+      curr_max = Math.max(curr_max, dataset[key]);
+    }
   }
   return curr_max;
 };
@@ -340,4 +447,14 @@ var select_data = (json_data, range) => {
     dataset.push([precinct, total]);
   }
   return dataset;
+};
+
+var get_min_max = (dataset) => {
+  let curr_min = Number.MAX_SAFE_INTEGER;
+  let curr_max = 0;
+  for (let i = 0; i < dataset.length; i++) {
+    curr_min = Math.min(curr_min, dataset[i][1]);
+    curr_max = Math.max(curr_max, dataset[i][1]);
+  }
+  return [curr_min, curr_max];
 };
