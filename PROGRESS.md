@@ -92,4 +92,9 @@ Further small advancements, adding updateable titles, positioning, small code
 improvements. Also discussed with another student on how to transition visualizations.
 Was able to remove get_min_max function by modifying the data retriever.
 Finished legend for datamap and added dynamic title based on data shown. TA
-suggested using a drag slider in d3 instead of a html range input.
+suggested using a drag slider in d3 instead of a html range input. Will also try
+to use an update function when calendar or line graph are changing.
+
+### Day 17
+questions: Is it better to get scripts from cdn or local? How to divide containers
+over page? How to transition datamap.
