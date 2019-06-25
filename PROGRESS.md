@@ -26,8 +26,10 @@ precinct and sorts crimes by date and time. Data is output in json. This reduces
 the file size to about 20MB. Keep getting topojson error.
 
 ### Day 8:
-Fixed topojson error after a day and a half. Now it still won't render properly,
-probably due to the projection or conversion from geojson. Can't figure it out.
+Fixed topojson error after a day and a half. The id of the precincts was lost in
+the conversion, which had to be added in an additional python script.
+Now it still won't render properly, probably due to the projection or conversion
+from geojson. Can't figure it out.
 
 ### Day 9:
 Found a working projection by trial and error. Centered the map on the proper
@@ -94,7 +96,18 @@ Was able to remove get_min_max function by modifying the data retriever.
 Finished legend for datamap and added dynamic title based on data shown. TA
 suggested using a drag slider in d3 instead of a html range input. Will also try
 to use an update function when calendar or line graph are changing.
+Reworked the json file again. Page load improves from ~2 seconds to
 
 ### Day 17
 questions: Is it better to get scripts from cdn or local? How to divide containers
-over page? How to transition datamap.
+over page? How to transition datamap? Functions are very long at the moment, how
+to improve that? Changed calendar legend to continuous one. Further small
+improvements. Got stuck on updating the map. Found out by tracing the error that
+it has to do with queryselectors having trouble with classes that start with a
+number. Have to rename precincts with a letter in front of it. This needs to
+be done in the topojson as well. Nigel suggested some of the get-functions can
+be moved to another file
+
+### Day 18
+Got tired of the favicon error so added a small logo. Trying to find a nice
+bootstrap template to present everything.
