@@ -113,4 +113,5 @@ Got tired of the favicon error so added a small logo. Trying to find a nice
 bootstrap template to present everything. Opted instead to make my own navbar
 and pages, as I don't need a whole template. Formalized style.md, as I had a
 loose style guide in my head but not on paper. Spent a lot of time working on
-fitting everything in the grid nicely.
+fitting everything in the grid nicely. Github pages needs a separate url, as
+it has github.io as source instead of the project folder.
