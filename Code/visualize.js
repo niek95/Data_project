@@ -4,27 +4,25 @@ window.onload = function() {
 
 var main = async () => {
   let json_data = await d3v5.json("/Data_project/Code/Data/NYPD_crimes_new.json");
-  //console.log(json_data)
+
+  // initiate some globals for general use
   crime_select = document.getElementById("crimeselect");
   all_button = document.getElementById("all-button");
 
   start_colour = "#FFFFFF";
   main_colour = "#A50F15";
 
-  // add dummy precinct to json, to show calendar and line chart of all precicnts
   selected_precinct = "all";
   selected_hour = 24;
   selected_day = 7;
 
-  var map = build_map(json_data);
-  window.addEventListener("resize", function() {
-    map.resize();
-  });
-
+  // build visualizations
+  build_map(json_data);
   build_inputs(json_data, map);
   build_calendar(json_data, selected_precinct, crime_select.value);
   build_line_graph(json_data, selected_precinct, crime_select.value);
 
+  // update visualizations when user selects parameter
   crime_select.onchange = () => {
     update_calendar(json_data, selected_precinct, crime_select.value);
     update_line_graph(json_data, selected_precinct, crime_select.value);
@@ -39,10 +37,12 @@ var main = async () => {
   };
 };
 
+// build input sliders, button and dropdown
 var build_inputs = (json_data, map) => {
   let input_width = document.getElementById("inputcontainer").clientWidth;
   let input_height = document.getElementById("inputcontainer").clientHeight;
   let margin = 20;
+
   var slider_day = d3v5
     .sliderBottom()
     .min(0)
@@ -110,6 +110,7 @@ var build_inputs = (json_data, map) => {
   svg_hour.call(slider_hour);
 };
 
+// build the datamap
 var build_map = (json_data) => {
   let crime_data = select_day(json_data, selected_hour, selected_day, crime_select.value);
   let map_width = document.getElementById("mapcontainer").clientWidth;
@@ -157,6 +158,12 @@ var build_map = (json_data) => {
    }
   });
 
+  // add resize event
+  window.addEventListener("resize", () => {
+    map.resize();
+  });
+
+  // add title
   let title = () => {
     if (selected_day == 7) {
       if (selected_hour == 24) {
@@ -183,8 +190,8 @@ var build_map = (json_data) => {
     .attr("text-anchor", "middle")
     .attr("font-size", 18);
 
+  // add legend
   let svg = d3v5.select(".datamap").append("g").attr("class", "map-legend");
-
   let defs = svg.append("defs");
 
   let linearGradient = defs.append("linearGradient")
@@ -231,10 +238,9 @@ var build_map = (json_data) => {
     .text((d) => { return d; })
     .attr("text-anchor", "middle")
     .attr("font-size", 10);
-
-  return map;
 };
 
+// update function for the datamap
 var update_map = (map, json_data) => {
   let crime_data = select_day(json_data, selected_hour, selected_day, crime_select.value);
   var colour_data = {};
@@ -246,6 +252,10 @@ var update_map = (map, json_data) => {
         colour_data[iso] = {numberOfThings: value, fillColor: palette_scale(value)};
     });
 
+  // update map itself
+  map.updateChoropleth(colour_data);
+
+  // update legend with new values
   let legend_values = [0, 0.2, 0.4, 0.6, 0.8, 1];
   legend_values = legend_values.map((x) => { return Math.floor(crime_data[1] * x); });
 
@@ -257,6 +267,7 @@ var update_map = (map, json_data) => {
     .attr("text-anchor", "middle")
     .attr("font-size", 10);
 
+  // update title
   let title = () => {
     if (selected_day == 7) {
       if (selected_hour == 24) {
@@ -275,10 +286,9 @@ var update_map = (map, json_data) => {
 
   svg.select(".map-title")
     .text(title);
-
-  map.updateChoropleth(colour_data);
 };
 
+// build the calendar
 var build_calendar = (json_data, precinct, crime_level) => {
   let width = document.getElementById("calcontainer").clientWidth;
   let height = document.getElementById("calcontainer").clientHeight;
@@ -292,6 +302,8 @@ var build_calendar = (json_data, precinct, crime_level) => {
   let month = d3v5.timeFormat("%m");
 	let format = d3v5.timeFormat("%Y%m%d");
   let months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  // get the maxium amount of crimes, to scale colour
   let max_crimes = 0;
   if (precinct == "all") {
     max_crimes = get_max_day(json_data, crime_level)[1];
@@ -302,6 +314,7 @@ var build_calendar = (json_data, precinct, crime_level) => {
             .domain([0, max_crimes])
             .range([start_colour, main_colour]);
 
+  // add svg and group
   let svg = d3v5.select("#calcontainer")
     .append("svg")
     .attr("width", width)
@@ -309,19 +322,34 @@ var build_calendar = (json_data, precinct, crime_level) => {
     .attr("class", "calendar")
     .append("g");
 
-let week_days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
-  svg.selectAll(".day-labels")
-    .data(week_days)
-    .enter()
-    .append("text")
-    .attr("class", "day-labels")
-    .attr("x", margin / 2)
-    .attr("y", (d, i) => {
-      return margin + cell_size * (i + 1);
-    })
-    .text((d) => {
-      return d; });
+  // add day and month labels
+  let week_days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+    svg.selectAll(".day-labels")
+      .data(week_days)
+      .enter()
+      .append("text")
+      .attr("class", "day-labels")
+      .attr("x", margin / 2)
+      .attr("y", (d, i) => {
+        return margin + cell_size * (i + 1);
+      })
+      .text((d) => {
+        return d; });
+        let month_titles = svg.selectAll(".month-label")
+          .data(months)
+          .enter()
+          .append("g");
 
+        month_titles.append("text")
+          .attr("class", "month-label")
+          .attr("x", (d, i) => {
+            return margin + i * (width - 2 * margin) / 12;
+          })
+          .attr("y", 4 * margin / 5)
+          .attr("text-anchor", "start")
+          .text((d,i) => { return months[i]; });
+
+  // add days and fill in colour
   let rect = svg.selectAll(".day")
    .data((d) => {
      return d3.time.days(new Date(2014, 0, 1), new Date(2015, 0, 1));
@@ -337,26 +365,12 @@ let week_days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
    .attr("stroke", "black")
    .attr("stroke-width", 1);
 
-
   rect.filter((d) => {
     return d in calendar_data;
   })
     .attr("fill", (d) => { return colour_scale(calendar_data[d]); });
 
-  let month_titles = svg.selectAll(".month-label")
-    .data(months)
-    .enter()
-    .append("g");
-
-  month_titles.append("text")
-    .attr("class", "month-label")
-    .attr("x", (d, i) => {
-      return margin + i * (width - 2 * margin) / 12;
-    })
-    .attr("y", 4 * margin / 5)
-    .attr("text-anchor", "start")
-    .text((d,i) => { return months[i]; });
-
+  // add title
   d3v5.select(".calendar")
     .append("text")
     .attr("class", "cal-title")
@@ -370,10 +384,10 @@ let week_days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
       return title[crime_level] + " per day in 2014: Precinct " + precinct.slice(1);
     });
 
+  // add legend
   svg = d3v5.select(".calendar").append("g").attr("class", "cal-legend");
 
   let defs = svg.append("defs");
-
   let linearGradient = defs.append("linearGradient")
       .attr("id", "linear-gradient");
 
@@ -420,17 +434,21 @@ let week_days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
     .attr("font-size", 10);
 };
 
+// update function for the calendar
 var update_calendar = (json_data, precinct, crime_level) => {
+  // get maximum amount of crimes to scale colour
   let max_crimes = 0;
   if (precinct == "all") {
     max_crimes = get_max_day(json_data, crime_level)[1];
   } else {
     max_crimes = get_max_day(json_data, crime_level)[0];
   }
+
   let colour_scale = d3.scale.linear()
             .domain([0, max_crimes])
             .range([start_colour, main_colour]);
 
+  // update title
   d3v5.select(".cal-title")
     .text((d) => {
       let title = ["Total crimes", "Violations", "Misdemeanors", "Felonies"];
@@ -440,6 +458,7 @@ var update_calendar = (json_data, precinct, crime_level) => {
       return title[crime_level] + " per day in 2014: Precinct " + precinct.slice(1);
     });
 
+  // update day colours
   let calendar_data = get_calendar_data(json_data, precinct, crime_level);
   let svg = d3v5.select(".calendar");
 
@@ -450,6 +469,7 @@ var update_calendar = (json_data, precinct, crime_level) => {
     })
     .attr("fill", (d) => { return colour_scale(calendar_data[d]); });
 
+  // update legend values
   let legend_values = [0, 0.2, 0.4, 0.6, 0.8, 1];
   legend_values = legend_values.map((x) => { return Math.floor(max_crimes * x); });
 
@@ -460,14 +480,17 @@ var update_calendar = (json_data, precinct, crime_level) => {
     .attr("font-size", 10);
 };
 
+// build the line graph
 var build_line_graph = (json_data, precinct, crime_level) => {
-  hour_data = get_hour_data(json_data, precinct, crime_level);
+  let hour_data = get_hour_data(json_data, precinct, crime_level);
 
+  // get width from containing element
   let width = document.getElementById("linecontainer").clientWidth;
   let height = document.getElementById("linecontainer").clientWidth;
   let margin = height / 10;
   let data_points = 24;
 
+  // define scale and line
   let xScale = d3v5.scaleLinear()
     .domain([0, data_points - 1])
     .range([margin, Math.min(width,height) - margin]);
@@ -484,6 +507,7 @@ var build_line_graph = (json_data, precinct, crime_level) => {
       return yScale(d);
     });
 
+    // add svg, axes and grid to container
     let svg = d3v5.select("#linecontainer")
       .append("svg")
       .attr("viewBox", "0 0 " + Math.min(width,height) + " " + Math.min(width,height))
@@ -525,6 +549,7 @@ var build_line_graph = (json_data, precinct, crime_level) => {
       .attr("stroke", "black")
       .attr("stroke-width", "1px");
 
+    // add line
     svg.append("path")
       .datum(hour_data)
       .attr("class", "line")
@@ -532,6 +557,7 @@ var build_line_graph = (json_data, precinct, crime_level) => {
       .attr("fill", "none")
       .attr("stroke", main_colour);
 
+    // add title
     svg.append("text")
       .attr("transform", "translate(" + width / 2 + "," + margin / 2 + ")")
       .attr("text-anchor", "middle")
@@ -543,18 +569,19 @@ var build_line_graph = (json_data, precinct, crime_level) => {
         }
         return title[crime_level] + " by the hour in 2014: Precinct " + precinct.slice(1);
       });
-        console.log([width, height])
 };
 
+// update function for the line graph
 var update_line_graph = (json_data, precinct, crime_level) => {
   let hour_data = get_hour_data(json_data, precinct, crime_level);
 
-  // 1.1 factor needed to offset margin of original graph
-  let width = document.getElementById("linecontainer").clientWidth
+  // get width and height from containing element
+  let width = document.getElementById("linecontainer").clientWidth;
   let height = document.getElementById("linecontainer").clientWidth;
   let margin = height / 10;
   let data_points = 24;
 
+  // define scale and line
   let xScale = d3v5.scaleLinear()
     .domain([0, data_points - 1])
     .range([margin, Math.min(width,height) - margin]);
@@ -571,6 +598,7 @@ var update_line_graph = (json_data, precinct, crime_level) => {
       return yScale(d);
     });
 
+  // update title
   d3v5.select(".line-title")
   .text((d) => {
     let title = ["Total crimes", "Violations", "Misdemeanors", "Felonies"];
@@ -580,8 +608,8 @@ var update_line_graph = (json_data, precinct, crime_level) => {
     return title[crime_level] + " by the hour in 2014: Precinct " + precinct.slice(1);
   });
 
+  // transition line and scales
   let svg = d3v5.select(".line-chart").transition();
-
   svg.select(".line")
       .duration(750)
       .attr("d", line(hour_data));
