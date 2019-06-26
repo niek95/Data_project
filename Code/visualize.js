@@ -3,7 +3,7 @@ window.onload = function() {
 };
 
 var main = async () => {
-  let json_data = await d3v5.json("Data/NYPD_crimes_new.json");
+  let json_data = await d3v5.json("/Code/Data/NYPD_crimes_new.json");
   //console.log(json_data)
   crime_select = document.getElementById("crimeselect");
   all_button = document.getElementById("all-button");
