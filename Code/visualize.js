@@ -44,10 +44,11 @@ var build_inputs = (json_data, map) => {
   let input_height = document.getElementById("inputcontainer").clientHeight;
   let margin = 20;
   var slider_day = d3v5
-    .sliderRight()
+    .sliderBottom()
     .min(0)
     .max(7)
     .height(input_height - margin)
+    .width(input_width / 3 - margin)
     .ticks(7)
     .tickFormat((d) => {
       days = ["Su","Mo","Tu","We","Th","Fr","Sa", "All"];
@@ -62,10 +63,11 @@ var build_inputs = (json_data, map) => {
     });
 
   var slider_hour = d3v5
-    .sliderRight()
+    .sliderBottom()
     .min(0)
     .max(24)
     .height(input_height - margin)
+    .width(input_width / 3 - margin)
     .ticks(25)
     .tickFormat((d) => {
       if (d == 24) {
@@ -124,14 +126,14 @@ var build_map = (json_data) => {
   var map = new Datamap({
     element: document.getElementById("mapcontainer"),
     responsive: true,
-    aspectRatio: 0.45,
+    aspectRatio: 0.9,
     data: colour_data,
     geographyConfig: {
       dataUrl: "/Code/Data/precincts.json",
       popupTemplate: function(geo, data) {
         return ['<div class="hoverinfo"><strong>',
                 "Precinct: " +
-                geo.properties.precinct,
+                geo.properties.precinct.slice(1),
                 ': ' + data.numberOfThings,
                 '</strong></div>'].join('');
       }
@@ -140,8 +142,8 @@ var build_map = (json_data) => {
     setProjection: (element, options) => {
       var projection, path;
       projection = d3.geo.equirectangular()
-          .center([-73.70, 40.730610])
-          .scale(50000);
+          .center([-73.65, 40.67])
+          .scale(45000);
       path = d3.geo.path()
         .projection(projection);
       return {path: path, projection: projection};
@@ -287,7 +289,7 @@ var update_map = (map, json_data) => {
 
 var build_calendar = (json_data, precinct, crime_level) => {
   let width = document.getElementById("calcontainer").clientWidth;
-  let height = document.getElementById("linecontainer").clientHeight;
+  let height = document.getElementById("calcontainer").clientHeight;
   let margin = width / 15;
   let month_margin = 3;
   let cell_size = (width - 2 * margin - 12 * month_margin) / 53;
@@ -375,9 +377,6 @@ let week_days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
       }
       return title[crime_level] + " per day in 2014: Precinct " + precinct.slice(1);
     });
-
-  let legend_array = [0, 0.25, 0.5, 0.75, 1];
-  legend_array = legend_array.map((x) => { return max_crimes * x; });
 
   svg = d3v5.select(".calendar").append("g").attr("class", "cal-legend");
 
@@ -479,11 +478,11 @@ var build_line_graph = (json_data, precinct, crime_level) => {
 
   let xScale = d3v5.scaleLinear()
     .domain([0, data_points - 1])
-    .range([margin, width - margin]);
+    .range([margin, Math.min(width,height) - margin]);
 
   let yScale = d3v5.scaleLinear()
     .domain([0, Math.max(...hour_data)])
-    .range([height - margin, margin]);
+    .range([Math.min(width,height) - margin, margin]);
 
   let line = d3v5.line()
     .x((d, i) => {
@@ -495,10 +494,8 @@ var build_line_graph = (json_data, precinct, crime_level) => {
 
     let svg = d3v5.select("#linecontainer")
       .append("svg")
-      .attr("width", width)
-      .attr("height", height)
       .attr("viewBox", "0 0 " + Math.min(width,height) + " " + Math.min(width,height))
-      .attr("preserveAspectRatio","xMinYMin")
+      .attr("preserveAspectRatio","xMidYMid meet")
       .append("g")
       .attr("class", "line-chart");
 
@@ -518,7 +515,7 @@ var build_line_graph = (json_data, precinct, crime_level) => {
       .append("line")
       .attr("class", "horizontal-grid")
       .attr("x1", margin)
-      .attr("x2", width - margin)
+      .attr("x2", Math.min(width,height) - margin)
       .attr("y1", (d) => { return yScale(d);})
       .attr("y2", (d) => { return yScale(d);})
       .attr("stroke", "black")
@@ -532,7 +529,7 @@ var build_line_graph = (json_data, precinct, crime_level) => {
       .attr("x1", (d) => { return xScale(d);})
       .attr("x2", (d) => { return xScale(d);})
       .attr("y1", margin)
-      .attr("y2", height - margin)
+      .attr("y2", Math.min(width,height) - margin)
       .attr("stroke", "black")
       .attr("stroke-width", "1px");
 
