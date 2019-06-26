@@ -3,7 +3,7 @@ window.onload = function() {
 };
 
 var main = async () => {
-  let json_data = await d3v5.json("/Data_project/Code/Data/NYPD_crimes_new.json");
+  let json_data = await d3v5.json("/data_project/Code/Data/NYPD_crimes_new.json");
   //console.log(json_data)
   crime_select = document.getElementById("crimeselect");
   all_button = document.getElementById("all-button");
@@ -129,7 +129,7 @@ var build_map = (json_data) => {
     aspectRatio: 0.9,
     data: colour_data,
     geographyConfig: {
-      dataUrl: "/Data_project/Code/Data/precincts.json",
+      dataUrl: "/data_project/Code/Data/precincts.json",
       popupTemplate: function(geo, data) {
         return ['<div class="hoverinfo"><strong>',
                 "Precinct: " +
@@ -142,8 +142,8 @@ var build_map = (json_data) => {
     setProjection: (element, options) => {
       var projection, path;
       projection = d3.geo.equirectangular()
-          .center([-73.65, 40.67])
-          .scale(45000);
+          .center([-73.72, 40.76])
+          .scale(50000);
       path = d3.geo.path()
         .projection(projection);
       return {path: path, projection: projection};
@@ -464,7 +464,7 @@ var build_line_graph = (json_data, precinct, crime_level) => {
   hour_data = get_hour_data(json_data, precinct, crime_level);
 
   let width = document.getElementById("linecontainer").clientWidth;
-  let height = document.getElementById("linecontainer").clientHeight;
+  let height = document.getElementById("linecontainer").clientWidth;
   let margin = height / 10;
   let data_points = 24;
 
@@ -550,8 +550,8 @@ var update_line_graph = (json_data, precinct, crime_level) => {
   let hour_data = get_hour_data(json_data, precinct, crime_level);
 
   // 1.1 factor needed to offset margin of original graph
-  let width = document.getElementById("linecontainer").clientWidth / 1.1;
-  let height = document.getElementById("linecontainer").clientHeight / 1.1;
+  let width = document.getElementById("linecontainer").clientWidth
+  let height = document.getElementById("linecontainer").clientWidth;
   let margin = height / 10;
   let data_points = 24;
 
