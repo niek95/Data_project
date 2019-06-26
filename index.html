@@ -18,7 +18,7 @@
     <script src="/Code/node_modules/datamaps/dist/datamaps.world.min.js"></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand">
         <img src="/Images/NYPD_logo.ico" width="30" height="30" class="d-inline-block align-top" alt="NYPD logo">
         NYPD
@@ -30,19 +30,24 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="/index.html">Introduction<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/index.html#About">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/visualization.html">Visualization</a>
+            <a class="nav-link" href="/index.html#Visualization">Visualization</a>
           </li>
         </ul>
       </div>
     </nav>
 
     <div class="container content" style="position: relative; width: 100%; height: 50%">
-      <div>
-        <p>Niek Slemmer, 12639184</p>
-        <p>Data source: https://www.kaggle.com/adamschroeder/crimes-new-york-city</p>
+
+    </div>
+    <div class="container">
+      <div class="introtext"><a name="About"></a>
+        <br>
+        <br>
+        <br>
+        <strong>About</strong>
         <p>
           Police budgets are never big enough to handle all cases being reported.
           To make sure the available budget is being spent as efficiently as
@@ -51,11 +56,63 @@
           they are needed. As the amount of crimes is very high for a city as big
           as New York, I built an interactive visualization to help police
           departments in determining where and when capacity is needed the most.
+          Data is sourced from the following kaggle dataset, which is based on
+          official New York police data:
+          <a href="https://www.kaggle.com/adamschroeder/crimes-new-york-city">
+            https://www.kaggle.com/adamschroeder/crimes-new-york-city
+          </a>
         </p>
       </div>
+      <div class="usagetext">
+        <strong>Usage</strong>
+        <br>
+        <p>
+          The map of New york can be manipulated with the sliders seen below. Either
+          a specific time of day, or a specific day of the week can be selected.
+          Additionally, a crime type can be selected in the dropdown menu.
+          Data will be shown for either violations, misdemeanors or felonies.
+          When a precinct in the map is clicked, data specific to that precinct
+          will be shown in the line graph and calendar. The 'all'
+          button reverts the selected precinct back to all precincts combined.
+      <div class="row"><a name="Visualization"></a>
+        <div class="col" style="height:25vh;">
+          <div id="inputcontainer" style="height:100%">
+            <label for="exampleFormControlSelect1"><strong>Select crime type</strong></label>
+            <select class="form-control" id="crimeselect" style="width:50%">
+              <option value="0" selected>All crime</option>
+              <option value="1">Violations</option>
+              <option value="2">Misdemeanors</option>
+              <option value="3">Felonies</option>
+            </select>
+            <button type="button" class="btn btn-dark btn-sm" id="all-button">All precincts</button>
+            <div class="sliders" style="height:50%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col">
+          <div id="mapcontainer" style="height:100%"></div>
+        </div>
+        <div class="col">
+          <div id="linecontainer" style="height:100%"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div id="calcontainer"></div>
+        </div>
+      </div>
     </div>
+    <footer class="page-footer font-small blue pt-4">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="/Code/helpers.js"></script>
+    <script src="/Code/visualize.js"></script>
+    <footer>
+      <p>
+        Niek Slemmer, 12639184, Minor Programmeren 2019
+      </p>
+    </footer>
   </body>
 </html>
