@@ -151,16 +151,8 @@ var build_map = (json_data) => {
    done: datamap => {
      datamap.svg.selectAll(".datamaps-subunit").on("click", geography => {
        selected_precinct = geography.properties.precinct;
-       if (document.getElementsByClassName("calendar").length == 0) {
-         build_calendar(json_data, selected_precinct, crime_select.value);
-       } else {
-         update_calendar(json_data, selected_precinct, crime_select.value);
-       }
-       if (document.getElementsByClassName("line-chart").length == 0) {
-         build_line_graph(json_data, selected_precinct, crime_select.value);
-       } else {
-         update_line_graph(json_data, selected_precinct, crime_select.value);
-       }
+       update_calendar(json_data, selected_precinct, crime_select.value);
+       update_line_graph(json_data, selected_precinct, crime_select.value);
      });
    }
   });
@@ -473,6 +465,7 @@ var build_line_graph = (json_data, precinct, crime_level) => {
 
   let width = document.getElementById("linecontainer").clientWidth;
   let height = document.getElementById("linecontainer").clientHeight;
+    console.log([width, height])
   let margin = height / 10;
   let data_points = 24;
 
@@ -551,22 +544,25 @@ var build_line_graph = (json_data, precinct, crime_level) => {
         }
         return title[crime_level] + " by the hour in 2014: Precinct " + precinct.slice(1);
       });
+        console.log([width, height])
 };
 
 var update_line_graph = (json_data, precinct, crime_level) => {
   let hour_data = get_hour_data(json_data, precinct, crime_level);
-  let width = document.getElementById("linecontainer").clientWidth;
-  let height = document.getElementById("linecontainer").clientHeight;
+
+  // 1.1 factor needed to offset margin of original graph
+  let width = document.getElementById("linecontainer").clientWidth / 1.1;
+  let height = document.getElementById("linecontainer").clientHeight / 1.1;
   let margin = height / 10;
   let data_points = 24;
 
   let xScale = d3v5.scaleLinear()
     .domain([0, data_points - 1])
-    .range([margin, width - margin]);
+    .range([margin, Math.min(width,height) - margin]);
 
   let yScale = d3v5.scaleLinear()
     .domain([0, Math.max(...hour_data)])
-    .range([height - margin, margin]);
+    .range([Math.min(width,height) - margin, margin]);
 
   let line = d3v5.line()
     .x((d, i) => {

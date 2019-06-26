@@ -38,24 +38,38 @@
         </ul>
       </div>
     </nav>
-
     <div class="container">
+      <div class="usagetext">
+        <strong>Usage</strong>
+        <br>
+        <p>
+          The map of New york can be manipulated with the sliders seen below. Either
+          a specific time of day, or a specific day of the week can be selected.
+          Additionally, a crime type can be selected in the dropdown menu.
+          Data will be shown for either violations, misdemeanors or felonies.
+          When a precinct in the map is clicked, data specific to that precinct
+          will be shown in the line graph and calendar.
       <div class="row">
-        <div class="col" style="height:20vh;">
-          <div id="inputcontainer">
+        <div class="col" style="height:25vh;">
+          <div id="inputcontainer" style="height:100%">
             <label for="exampleFormControlSelect1">Select crime type</label>
-            <select class="form-control" id="crimeselect">
+            <select class="form-control" id="crimeselect" style="width:50%">
               <option value="0" selected>All crime</option>
               <option value="1">Violations</option>
               <option value="2">Misdemeanors</option>
               <option value="3">Felonies</option>
             </select>
+<<<<<<< HEAD
             <button type="button" class="btn btn-dark" id="all-button">All precincts</button>
             <div class="sliders" style="height:50"></div>
+=======
+            <button type="button" class="btn btn-dark btn-sm" id="all-button">All precincts</button>
+            <div class="sliders" style="height:50%"></div>
+>>>>>>> master
           </div>
         </div>
       </div>
-      <div class="row no-gutters" >
+      <div class="row no-gutters">
         <div class="col">
           <div id="mapcontainer" style="height:100%"></div>
         </div>
@@ -69,10 +83,19 @@
         </div>
       </div>
     </div>
+<<<<<<< HEAD
       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
       <script src="/Data_project/Code/helpers.js"></script>
       <script src="/Data_project/Code/visualize.js"></script>
+=======
+    <footer class="page-footer font-small blue pt-4">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="/Code/helpers.js"></script>
+    <script src="/Code/visualize.js"></script>
+>>>>>>> master
   </body>
 </html>
