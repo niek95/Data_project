@@ -19,11 +19,11 @@ github page can be found [here](https://niek95.github.io/Data_project/).
 
 ### Screenshots
 Select crime type, day of week, or time of day
-<img src="/Docs/screenshot3.png" alt="screenshot of input" width="500"/>  
+<img src="/Docs/screenshot3.PNG" alt="screenshot of input" width="500"/>  
 Heatmap of city and line chart  
-<img src="/Docs/screenshot1.png" alt="screenshot of heatmap and linechart" width="500"/>  
+<img src="/Docs/screenshot1.PNG" alt="screenshot of heatmap and linechart" width="500"/>  
 Heatmap calendar  
-<img src="/Docs/screenshot2.png" alt="screenshot of calendar heatmap" width="500"/>
+<img src="/Docs/screenshot2.PNG" alt="screenshot of calendar heatmap" width="500"/>
 
 The following libraries and sources were used for this project. Please consult their websites and repositories for relevant copyright information before using any code from this project:
 #### External sources
