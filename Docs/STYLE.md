@@ -14,7 +14,9 @@
 * Each method is put on a separate line
 * Assign relevant svg to a variable if it is used more than once
 * Create a group for elements in svg that belong to the same part of the visualization
-*
 
 ### HTML
 * Assign class to each input, text or visualization
+
+### General
+* Comment wherever purpose of code is not directly recognizable

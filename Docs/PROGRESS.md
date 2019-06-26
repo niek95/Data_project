@@ -110,4 +110,7 @@ be moved to another file
 
 ### Day 18
 Got tired of the favicon error so added a small logo. Trying to find a nice
-bootstrap template to present everything. 
+bootstrap template to present everything. Opted instead to make my own navbar
+and pages, as I don't need a whole template. Formalized style.md, as I had a
+loose style guide in my head but not on paper. Spent a lot of time working on
+fitting everything in the grid nicely.

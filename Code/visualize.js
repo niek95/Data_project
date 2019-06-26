@@ -7,6 +7,8 @@ var main = async () => {
   //console.log(json_data)
   crime_select = document.getElementById("crimeselect");
   all_button = document.getElementById("all-button");
+
+  start_colour = "#FFFFFF";
   main_colour = "#A50F15";
 
   // add dummy precinct to json, to show calendar and line chart of all precicnts
@@ -38,11 +40,14 @@ var main = async () => {
 };
 
 var build_inputs = (json_data, map) => {
+  let input_width = document.getElementById("inputcontainer").clientWidth;
+  let input_height = document.getElementById("inputcontainer").clientHeight;
+  let margin = 20;
   var slider_day = d3v5
-    .sliderBottom()
+    .sliderRight()
     .min(0)
     .max(7)
-    .width(300)
+    .height(input_height - margin)
     .ticks(7)
     .tickFormat((d) => {
       days = ["Su","Mo","Tu","We","Th","Fr","Sa", "All"];
@@ -57,10 +62,10 @@ var build_inputs = (json_data, map) => {
     });
 
   var slider_hour = d3v5
-    .sliderBottom()
+    .sliderRight()
     .min(0)
     .max(24)
-    .width(500)
+    .height(input_height - margin)
     .ticks(25)
     .tickFormat((d) => {
       if (d == 24) {
@@ -78,20 +83,26 @@ var build_inputs = (json_data, map) => {
     });
 
   let svg_day = d3v5
-    .select(".slider-day")
+    .select(".sliders")
     .append("svg")
-    .attr("width", 400)
-    .attr("height", 70)
+    .attr("class", "slider-day")
+    .attr("x", 0)
+    .attr("y", input_height / 2)
+    .attr("width", input_width / 2)
+    .attr("height", input_height / 2)
     .append("g")
-    .attr('transform', 'translate(20, 30)');
+    .attr("transform", "translate(" + margin + "," + margin +")");
 
   let svg_hour = d3v5
-    .select(".slider-hour")
+    .select(".sliders")
     .append("svg")
-    .attr("width", 600)
-    .attr("height", 70)
+    .attr("class", "slider-hour")
+    .attr("x", input_width / 2)
+    .attr("y", input_height / 2)
+    .attr("width", input_width / 2)
+    .attr("height", input_height / 2)
     .append("g")
-    .attr("transform", "translate(20, 30)");
+    .attr("transform", "translate(" + margin + "," + margin +")");
 
   svg_day.call(slider_day);
   svg_hour.call(slider_hour);
@@ -101,7 +112,6 @@ var build_map = (json_data) => {
   let crime_data = select_day(json_data, selected_hour, selected_day, crime_select.value);
   let map_width = document.getElementById("mapcontainer").clientWidth;
   let map_height = document.getElementById("mapcontainer").clientHeight;
-  let start_colour = "#FFFFFF";
   var colour_data = {};
   let palette_scale = d3.scale.linear()
             .domain([0, crime_data[1]])
@@ -233,7 +243,6 @@ var build_map = (json_data) => {
 
 var update_map = (map, json_data) => {
   let crime_data = select_day(json_data, selected_hour, selected_day, crime_select.value);
-  let start_colour = "#FFFFFF";
   var colour_data = {};
   let palette_scale = d3.scale.linear()
             .domain([0, crime_data[1]])
@@ -277,13 +286,13 @@ var update_map = (map, json_data) => {
 };
 
 var build_calendar = (json_data, precinct, crime_level) => {
-  let cal_width = 700;
-  let margin = 50;
+  let width = document.getElementById("calcontainer").clientWidth;
+  let height = document.getElementById("linecontainer").clientHeight;
+  let margin = width / 15;
   let month_margin = 3;
-  let cell_size = (cal_width - 2 * margin - 12 * month_margin) / 53;
+  let cell_size = (width - 2 * margin - 12 * month_margin) / 53;
   let cal_height = 2 * margin + 7 * cell_size;
   let calendar_data = get_calendar_data(json_data, precinct, crime_level);
-  let start_colour = "#FFFFFF";
   let day = d3v5.timeFormat("%w");
   let week = d3v5.timeFormat("%U");
   let month = d3v5.timeFormat("%m");
@@ -301,7 +310,7 @@ var build_calendar = (json_data, precinct, crime_level) => {
 
   let svg = d3v5.select("#calcontainer")
     .append("svg")
-    .attr("width", cal_width)
+    .attr("width", width)
     .attr("height", cal_height)
     .attr("class", "calendar")
     .append("g");
@@ -348,7 +357,7 @@ let week_days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
   month_titles.append("text")
     .attr("class", "month-label")
     .attr("x", (d, i) => {
-      return margin + i * (cal_width - 2 * margin) / 12;
+      return margin + i * (width - 2 * margin) / 12;
     })
     .attr("y", 4 * margin / 5)
     .attr("text-anchor", "start")
@@ -357,7 +366,7 @@ let week_days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
   d3v5.select(".calendar")
     .append("text")
     .attr("class", "cal-title")
-    .attr("transform", "translate(" + cal_width / 2 + "," + margin / 2 + ")")
+    .attr("transform", "translate(" + width / 2 + "," + margin / 2 + ")")
     .attr("text-anchor", "middle")
     .text((d) => {
       let title = ["Total crimes", "Violations", "Misdemeanors", "Felonies"];
@@ -391,7 +400,7 @@ let week_days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
       .attr("offset", "100%")
       .attr("stop-color", main_colour);
 
-  let legend_width = (cal_width - 2 * margin) / 3;
+  let legend_width = (width - 2 * margin) / 3;
   let legend_height = 20;
   let legend_values = [0, 0.2, 0.4, 0.6, 0.8, 1];
   let legend_x = legend_width + margin;
@@ -427,7 +436,6 @@ var update_calendar = (json_data, precinct, crime_level) => {
   } else {
     max_crimes = get_max_day(json_data, crime_level)[0];
   }
-  let start_colour = "#FFFFFF";
   let colour_scale = d3.scale.linear()
             .domain([0, max_crimes])
             .range([start_colour, main_colour]);
