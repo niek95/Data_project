@@ -465,7 +465,6 @@ var build_line_graph = (json_data, precinct, crime_level) => {
 
   let width = document.getElementById("linecontainer").clientWidth;
   let height = document.getElementById("linecontainer").clientHeight;
-    console.log([width, height])
   let margin = height / 10;
   let data_points = 24;
 
