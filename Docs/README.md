@@ -18,7 +18,7 @@ github page can be found [here](https://niek95.github.io/Data_project/).
 * When a police precinct is clicked, the line chart and calendar updates with data from that precinct.
 
 ### Screenshots
-Select crime type, day of week, or time of day
+Select crime type, day of week, or time of day  
 <img src="/Docs/screenshot3.PNG" alt="screenshot of input" width="500"/>  
 Heatmap of city and line chart  
 <img src="/Docs/screenshot1.PNG" alt="screenshot of heatmap and linechart" width="500"/>  
