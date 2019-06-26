@@ -3,7 +3,7 @@ window.onload = function() {
 };
 
 var main = async () => {
-  let json_data = await d3v5.json("/Code/Data/NYPD_crimes_new.json");
+  let json_data = await d3v5.json("/Data_project/Code/Data/NYPD_crimes_new.json");
 
   // initiate some globals for general use
   crime_select = document.getElementById("crimeselect");
@@ -133,7 +133,7 @@ var build_map = (json_data) => {
     aspectRatio: 0.9,
     data: colour_data,
     geographyConfig: {
-      dataUrl: "/Code/Data/precincts.json",
+      dataUrl: "/Data_project/Code/Data/precincts.json",
       popupTemplate: function(geo, data) {
         return ['<div class="hoverinfo"><strong>',
                 "Precinct: " +
