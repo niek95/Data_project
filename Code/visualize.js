@@ -17,10 +17,15 @@ var main = async () => {
   selected_day = 7;
 
   // build visualizations
-  build_map(json_data);
+  let map = build_map(json_data);
   build_inputs(json_data, map);
   build_calendar(json_data, selected_precinct, crime_select.value);
   build_line_graph(json_data, selected_precinct, crime_select.value);
+
+  // add resize event
+  window.addEventListener("resize", () => {
+    map.resize();
+  });
 
   // update visualizations when user selects parameter
   crime_select.onchange = () => {
@@ -113,8 +118,6 @@ var build_inputs = (json_data, map) => {
 // build the datamap
 var build_map = (json_data) => {
   let crime_data = select_day(json_data, selected_hour, selected_day, crime_select.value);
-  let map_width = document.getElementById("mapcontainer").clientWidth;
-  let map_height = document.getElementById("mapcontainer").clientHeight;
   var colour_data = {};
   let palette_scale = d3.scale.linear()
             .domain([0, crime_data[1]])
@@ -158,11 +161,6 @@ var build_map = (json_data) => {
    }
   });
 
-  // add resize event
-  window.addEventListener("resize", () => {
-    map.resize();
-  });
-
   // add title
   let title = () => {
     if (selected_day == 7) {
@@ -179,6 +177,9 @@ var build_map = (json_data) => {
       return crimes[crime_select.value] + " on " + days[selected_day] + " in 2014";
     }
   };
+
+  let map_width = document.getElementsByClassName("datamap")[0].clientWidth;
+  let map_height = document.getElementsByClassName("datamap")[0].clientHeight;
 
   d3v5.select(".datamap")
     .append("g")
@@ -238,6 +239,8 @@ var build_map = (json_data) => {
     .text((d) => { return d; })
     .attr("text-anchor", "middle")
     .attr("font-size", 10);
+
+  return map;
 };
 
 // update function for the datamap
