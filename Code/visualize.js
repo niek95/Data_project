@@ -25,6 +25,8 @@ var main = async () => {
   // add resize event
   window.addEventListener("resize", () => {
     map.resize();
+    build_inputs(json_data, map);
+    build_calendar(json_data, selected_precinct, crime_select.value);
   });
 
   // update visualizations when user selects parameter
@@ -44,6 +46,8 @@ var main = async () => {
 
 // build input sliders, button and dropdown
 var build_inputs = (json_data, map) => {
+  d3v5.select(".slider-day").remove();
+  d3v5.select(".slider-hour").remove();
   let input_width = document.getElementById("inputcontainer").clientWidth;
   let input_height = document.getElementById("inputcontainer").clientHeight;
   let margin = 20;
@@ -293,6 +297,7 @@ var update_map = (map, json_data) => {
 
 // build the calendar
 var build_calendar = (json_data, precinct, crime_level) => {
+  d3v5.selectAll(".calendar").remove();
   let width = document.getElementById("calcontainer").clientWidth;
   let height = document.getElementById("calcontainer").clientHeight;
   let margin = width / 15;
@@ -327,11 +332,11 @@ var build_calendar = (json_data, precinct, crime_level) => {
 
   // add day and month labels
   let week_days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
-    svg.selectAll(".day-labels")
+    svg.selectAll(".day-label")
       .data(week_days)
       .enter()
       .append("text")
-      .attr("class", "day-labels")
+      .attr("class", "day-label")
       .attr("x", margin / 2)
       .attr("y", (d, i) => {
         return margin + cell_size * (i + 1);
@@ -511,67 +516,67 @@ var build_line_graph = (json_data, precinct, crime_level) => {
     });
 
     // add svg, axes and grid to container
-    let svg = d3v5.select("#linecontainer")
-      .append("svg")
-      .attr("viewBox", "0 0 " + Math.min(width,height) + " " + Math.min(width,height))
-      .attr("preserveAspectRatio","xMidYMid meet")
-      .append("g")
-      .attr("class", "line-chart");
+  let svg = d3v5.select("#linecontainer")
+    .append("svg")
+    .attr("viewBox", "0 0 " + Math.min(width,height) + " " + Math.min(width,height))
+    .attr("preserveAspectRatio","xMidYMid meet")
+    .append("g")
+    .attr("class", "line-chart");
 
-    svg.append("g")
-      .attr("class", "x-axis")
-      .attr("transform", "translate(0," + (height - margin) + ")")
-      .call(d3v5.axisBottom(xScale).ticks(data_points));
+  svg.append("g")
+    .attr("class", "x-axis")
+    .attr("transform", "translate(0," + (height - margin) + ")")
+    .call(d3v5.axisBottom(xScale).ticks(data_points));
 
-    svg.append("g")
-      .attr("class", "y-axis")
-      .attr("transform", "translate("+ margin + ", 0)")
-      .call(d3v5.axisLeft(yScale));
+  svg.append("g")
+    .attr("class", "y-axis")
+    .attr("transform", "translate("+ margin + ", 0)")
+    .call(d3v5.axisLeft(yScale));
 
-    svg.selectAll("horizontal-grid")
-      .data(yScale.ticks())
-      .enter()
-      .append("line")
-      .attr("class", "horizontal-grid")
-      .attr("x1", margin)
-      .attr("x2", Math.min(width,height) - margin)
-      .attr("y1", (d) => { return yScale(d);})
-      .attr("y2", (d) => { return yScale(d);})
-      .attr("stroke", "black")
-      .attr("stroke-width", "1px");
+  svg.selectAll("horizontal-grid")
+    .data(yScale.ticks())
+    .enter()
+    .append("line")
+    .attr("class", "horizontal-grid")
+    .attr("x1", margin)
+    .attr("x2", Math.min(width,height) - margin)
+    .attr("y1", (d) => { return yScale(d);})
+    .attr("y2", (d) => { return yScale(d);})
+    .attr("stroke", "black")
+    .attr("stroke-width", "1px");
 
-    svg.selectAll("vertical-grid")
-      .data(xScale.ticks())
-      .enter()
-      .append("line")
-      .attr("class", "vertical-grid")
-      .attr("x1", (d) => { return xScale(d);})
-      .attr("x2", (d) => { return xScale(d);})
-      .attr("y1", margin)
-      .attr("y2", Math.min(width,height) - margin)
-      .attr("stroke", "black")
-      .attr("stroke-width", "1px");
+  svg.selectAll("vertical-grid")
+    .data(xScale.ticks())
+    .enter()
+    .append("line")
+    .attr("class", "vertical-grid")
+    .attr("x1", (d) => { return xScale(d);})
+    .attr("x2", (d) => { return xScale(d);})
+    .attr("y1", margin)
+    .attr("y2", Math.min(width,height) - margin)
+    .attr("stroke", "black")
+    .attr("stroke-width", "1px");
 
-    // add line
-    svg.append("path")
-      .datum(hour_data)
-      .attr("class", "line")
-      .attr("d", line)
-      .attr("fill", "none")
-      .attr("stroke", main_colour);
+  // add line
+  svg.append("path")
+    .datum(hour_data)
+    .attr("class", "line")
+    .attr("d", line)
+    .attr("fill", "none")
+    .attr("stroke", main_colour);
 
-    // add title
-    svg.append("text")
-      .attr("transform", "translate(" + width / 2 + "," + margin / 2 + ")")
-      .attr("text-anchor", "middle")
-      .attr("class", "line-title")
-      .text((d) => {
-        let title = ["Total crimes", "Violations", "Misdemeanors", "Felonies"];
-        if (precinct == "all") {
-          return title[crime_level] + " by the hour in 2014: All precincts";
-        }
-        return title[crime_level] + " by the hour in 2014: Precinct " + precinct.slice(1);
-      });
+  // add title
+  svg.append("text")
+    .attr("transform", "translate(" + width / 2 + "," + margin / 2 + ")")
+    .attr("text-anchor", "middle")
+    .attr("class", "line-title")
+    .text((d) => {
+      let title = ["Total crimes", "Violations", "Misdemeanors", "Felonies"];
+      if (precinct == "all") {
+        return title[crime_level] + " by the hour in 2014: All precincts";
+      }
+      return title[crime_level] + " by the hour in 2014: Precinct " + precinct.slice(1);
+    });
 };
 
 // update function for the line graph
@@ -583,7 +588,7 @@ var update_line_graph = (json_data, precinct, crime_level) => {
   let height = document.getElementById("linecontainer").clientWidth;
   let margin = height / 10;
   let data_points = 24;
-
+  
   // define scale and line
   let xScale = d3v5.scaleLinear()
     .domain([0, data_points - 1])
